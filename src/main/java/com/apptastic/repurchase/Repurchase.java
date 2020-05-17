@@ -34,8 +34,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -82,16 +82,21 @@ public class Repurchase {
      * @throws IOException
      */
     public Stream<Transaction> getTransactions(LocalDate startDate, LocalDate endDate) throws IOException {
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        InputStream inputStream;
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Bad argument. Start date after end date");
+        }
 
         try {
-            inputStream = sendRequest(startDate, endDate);
+            InputStream inputStream = sendRequest(startDate, endDate);
+            return parse(inputStream).stream();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return Stream.empty();
         }
+    }
 
+    private List<Transaction> parse(InputStream inputStream) throws IOException {
+        ArrayList<Transaction> transactions = new ArrayList<>();
         Document doc = Jsoup.parse(inputStream, "UTF-8", URL);
         Element tableElement = doc.selectFirst("table[id=resultReurchaseId]");
 
@@ -111,7 +116,7 @@ public class Repurchase {
 
             if (!hasInitHeaders && TransactionMapper.isHeaderColumn(rowItems)) {
                 String[] headers = { rowItems.get(0).text(), rowItems.get(1).text(), rowItems.get(2).text(),
-                                     rowItems.get(3).text(), rowItems.get(4).text(), rowItems.get(5).text() };
+                        rowItems.get(3).text(), rowItems.get(4).text(), rowItems.get(5).text() };
 
                 mapper.initialize(headers);
                 hasInitHeaders = true;
@@ -128,7 +133,7 @@ public class Repurchase {
             }
         }
 
-        return transactions.stream();
+        return transactions;
     }
 
     private static Transaction createTransaction(TransactionMapper mapper, Elements rowItems) {
