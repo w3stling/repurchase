@@ -56,7 +56,7 @@ public class Repurchase {
     /**
      * Get transactions from the last 30 days
      * @return stream of transactions
-     * @throws IOException
+     * @throws IOException IOException
      */
     public Stream<Transaction> getTransactions() throws IOException {
         return getTransactions(30);
@@ -66,7 +66,7 @@ public class Repurchase {
      * Get transactions from the given days back
      * @param daysBack - days back from today
      * @return stream of transactions
-     * @throws IOException
+     * @throws IOException IOException
      */
     public Stream<Transaction> getTransactions(int daysBack) throws IOException {
         LocalDate endDate = LocalDate.now();
@@ -79,7 +79,7 @@ public class Repurchase {
      * @param startDate - start date
      * @param endDate - end date
      * @return stream of transaction
-     * @throws IOException
+     * @throws IOException IOException
      */
     public Stream<Transaction> getTransactions(LocalDate startDate, LocalDate endDate) throws IOException {
         if (startDate.isAfter(endDate)) {
