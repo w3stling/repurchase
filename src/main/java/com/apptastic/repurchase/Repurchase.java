@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -49,6 +50,7 @@ import org.jsoup.select.Elements;
  * Repurchase
  */
 public class Repurchase {
+    private static final Logger LOGGER = Logger.getLogger(Repurchase.class.getName());
     private static final String URL = "http://www.nasdaqomx.com/transactions/markets/nordic/corporate-actions/stockholm/repurchases-of-own-shares";
 
     /**
@@ -103,32 +105,25 @@ public class Repurchase {
 
         for (Element row : tableRowElements) {
             Elements rowItems = row.select("td");
-            if (rowItems == null || rowItems.size() < 6) {
+            if (!isValidRow(rowItems)) {
                 continue;
             }
 
-            if (!hasInitHeaders && TransactionMapper.isHeaderColumn(rowItems.get(0).text().trim())) {
+            if (!hasInitHeaders && TransactionMapper.isHeaderColumn(rowItems)) {
                 String[] headers = { rowItems.get(0).text(), rowItems.get(1).text(), rowItems.get(2).text(),
                                      rowItems.get(3).text(), rowItems.get(4).text(), rowItems.get(5).text() };
+
                 mapper.initialize(headers);
                 hasInitHeaders = true;
             }
             else if (isTransactionRow(rowItems)){
                 try {
-                    Transaction transaction = new Transaction(mapper.getCompany(rowItems), mapper.getType(rowItems),
-                            mapper.getDate(rowItems), mapper.getPrice(rowItems),
-                            mapper.getQuantity(rowItems), mapper.getValue(rowItems),
-                            mapper.getComment(rowItems));
-
+                    Transaction transaction = createTransaction(mapper, rowItems);
                     if (isValid(transaction)) {
                         transactions.add(transaction);
-                    } else {
-                        var logger = Logger.getLogger("com.apptastic.repurchase");
-                        logger.log(Level.WARNING, "Exception when paring transaction.");
                     }
                 } catch (Exception e) {
-                    var logger = Logger.getLogger("com.apptastic.repurchase");
-                    logger.log(Level.WARNING, "Exception when paring transaction. ", e);
+                    LOGGER.log(Level.WARNING, "Exception when paring transaction. ", e);
                 }
             }
         }
@@ -136,8 +131,18 @@ public class Repurchase {
         return transactions.stream();
     }
 
+    private static Transaction createTransaction(TransactionMapper mapper, Elements rowItems) {
+        return new Transaction(mapper.getCompany(rowItems), mapper.getType(rowItems),
+                               mapper.getDate(rowItems), mapper.getPrice(rowItems),
+                               mapper.getQuantity(rowItems), mapper.getValue(rowItems),
+                               mapper.getComment(rowItems));
+    }
+
+    private boolean isValidRow(Elements row) {
+        return row != null && row.size() >= 6;
+    }
     private boolean isTransactionRow(Elements row) {
-        if (row == null || row.size() < 6) {
+        if (!isValidRow(row)) {
             return false;
         }
 
@@ -145,7 +150,7 @@ public class Repurchase {
         return dateText.length() == 10 && dateText.charAt(4) == '-' && dateText.charAt(7) == '-';
     }
 
-    private boolean isValid(Transaction transaction) {
+    private static boolean isValid(Transaction transaction) {
         return transaction != null &&
                transaction.getCompany() != null && transaction.getType() != null &&
                transaction.getDate() != null;
@@ -201,7 +206,8 @@ public class Repurchase {
             }
         }
 
-        public static boolean isHeaderColumn(String text) {
+        public static boolean isHeaderColumn(Elements rowItems) {
+            String text = rowItems.get(0).text().trim();
             return COLUMN_COMPANY.equalsIgnoreCase(text) || COLUMN_TYPE.equalsIgnoreCase(text) ||
                    COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
                    COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
@@ -282,11 +288,7 @@ public class Repurchase {
                 floatNumber = Double.valueOf(value);
             }
             catch (Exception e) {
-                var logger = Logger.getLogger("com.apptastic.repurchase");
-
-                if (logger.isLoggable(Level.WARNING))
-                    logger.log(Level.WARNING, "Failed to parse double. ", e);
-
+                LOGGER.log(Level.WARNING, "Failed to parse double. ", e);
                 floatNumber = Double.NaN;
             }
 
