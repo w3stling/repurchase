@@ -23,6 +23,6 @@
  */
 
 /**
- * This package is intended for extracting data from the Malta Financial Services Authority (MFSA) Person Discharging Managerial Responsibility (PDMR) registry.
+ * This package is intended for extracting information about repurchases of own shares from Nasdaq OMX Nordic.
  */
 package com.apptastic.repurchase;
