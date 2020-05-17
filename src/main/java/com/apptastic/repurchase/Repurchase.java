@@ -52,20 +52,18 @@ public class Repurchase {
     private static final String URL = "http://www.nasdaqomx.com/transactions/markets/nordic/corporate-actions/stockholm/repurchases-of-own-shares";
 
     /**
-     *
-     * @return
+     * Get transactions from the last 30 days
+     * @return stream of transactions
      * @throws IOException
      */
     public Stream<Transaction> getTransactions() throws IOException {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusMonths(1);
-        return getTransactions(startDate, endDate);
+        return getTransactions(30);
     }
 
     /**
-     *
-     * @param daysBack
-     * @return
+     * Get transactions from the given days back
+     * @param daysBack - days back from today
+     * @return stream of transactions
      * @throws IOException
      */
     public Stream<Transaction> getTransactions(int daysBack) throws IOException {
@@ -75,10 +73,10 @@ public class Repurchase {
     }
 
     /**
-     *
-     * @param startDate
-     * @param endDate
-     * @return
+     * Get transactions between the given two dates
+     * @param startDate - start date
+     * @param endDate - end date
+     * @return stream of transaction
      * @throws IOException
      */
     public Stream<Transaction> getTransactions(LocalDate startDate, LocalDate endDate) throws IOException {
@@ -110,31 +108,28 @@ public class Repurchase {
             }
 
             if (!hasInitHeaders && TransactionMapper.isHeaderColumn(rowItems.get(0).text().trim())) {
-                String[] headers = {rowItems.get(0).text(), rowItems.get(1).text(), rowItems.get(2).text(),
-                        rowItems.get(3).text(), rowItems.get(4).text(), rowItems.get(5).text()};
+                String[] headers = { rowItems.get(0).text(), rowItems.get(1).text(), rowItems.get(2).text(),
+                                     rowItems.get(3).text(), rowItems.get(4).text(), rowItems.get(5).text() };
                 mapper.initialize(headers);
                 hasInitHeaders = true;
-                continue;
-            } else if (!isTransactionRow(rowItems)) {
-                continue;
             }
+            else if (isTransactionRow(rowItems)){
+                try {
+                    Transaction transaction = new Transaction(mapper.getCompany(rowItems), mapper.getType(rowItems),
+                            mapper.getDate(rowItems), mapper.getPrice(rowItems),
+                            mapper.getQuantity(rowItems), mapper.getValue(rowItems),
+                            mapper.getComment(rowItems));
 
-            try {
-                Transaction transaction = new Transaction(mapper.getCompany(rowItems), mapper.getType(rowItems),
-                        mapper.getDate(rowItems), mapper.getPrice(rowItems),
-                        mapper.getQuantity(rowItems), mapper.getValue(rowItems),
-                        mapper.getComment(rowItems));
-
-                if (isValid(transaction)) {
-                    transactions.add(transaction);
-                }
-                else {
+                    if (isValid(transaction)) {
+                        transactions.add(transaction);
+                    } else {
+                        var logger = Logger.getLogger("com.apptastic.repurchase");
+                        logger.log(Level.WARNING, "Exception when paring transaction.");
+                    }
+                } catch (Exception e) {
                     var logger = Logger.getLogger("com.apptastic.repurchase");
-                    logger.log(Level.WARNING, "Exception when paring transaction.");
+                    logger.log(Level.WARNING, "Exception when paring transaction. ", e);
                 }
-            } catch (Exception e) {
-                var logger = Logger.getLogger("com.apptastic.repurchase");
-                logger.log(Level.WARNING, "Exception when paring transaction. ", e);
             }
         }
 
@@ -142,7 +137,7 @@ public class Repurchase {
     }
 
     private boolean isTransactionRow(Elements row) {
-        if (row == null && row.size() < 6) {
+        if (row == null || row.size() < 6) {
             return false;
         }
 
@@ -164,10 +159,11 @@ public class Repurchase {
         data.put("languageId", "");
 
         var request = HttpRequest.newBuilder()
-                .POST(ofFormData(data))
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .build();
+                                 .POST(ofFormData(data))
+                                 .uri(URI.create(URL))
+                                 .header("Accept-Encoding", "gzip")
+                                 .header("Content-Type", "application/x-www-form-urlencoded")
+                                 .build();
 
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
@@ -178,6 +174,7 @@ public class Repurchase {
 
         InputStream inputStream;
         String encoding = response.headers().firstValue("Content-Encoding").orElse("");
+
         if (encoding.equals("gzip")) {
             inputStream = new GZIPInputStream(response.body());
         }
@@ -206,8 +203,8 @@ public class Repurchase {
 
         public static boolean isHeaderColumn(String text) {
             return COLUMN_COMPANY.equalsIgnoreCase(text) || COLUMN_TYPE.equalsIgnoreCase(text) ||
-                    COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
-                    COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
+                   COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
+                   COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
         }
 
         public String getCompany(Elements rowItems) {
@@ -273,6 +270,10 @@ public class Repurchase {
         }
 
         private static double parseDouble(String value) {
+            if (value == null) {
+                return Double.NaN;
+            }
+
             var floatNumber = 0.0;
 
             try {
