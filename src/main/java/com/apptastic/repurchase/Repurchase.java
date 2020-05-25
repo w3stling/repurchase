@@ -76,8 +76,8 @@ public class Repurchase {
 
     /**
      * Get transactions between the given two dates
-     * @param startDate - start date
-     * @param endDate - end date
+     * @param startDate - inclusive start date
+     * @param endDate - inclusive end date
      * @return stream of transaction
      * @throws IOException IOException
      */
@@ -87,7 +87,7 @@ public class Repurchase {
         }
 
         try {
-            InputStream inputStream = sendRequest(startDate, endDate);
+            InputStream inputStream = sendRequest(startDate, endDate.plusDays(1));
             return parse(inputStream).stream();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
