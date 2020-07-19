@@ -31,6 +31,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,6 +174,7 @@ public class Repurchase {
                                  .uri(URI.create(URL))
                                  .header("Accept-Encoding", "gzip")
                                  .header("Content-Type", "application/x-www-form-urlencoded")
+                                 .timeout(Duration.ofSeconds(45))
                                  .build();
 
         HttpClient client = HttpClient.newHttpClient();

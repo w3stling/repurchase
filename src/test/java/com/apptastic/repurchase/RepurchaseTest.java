@@ -16,7 +16,7 @@ public class RepurchaseTest {
     public void repurchase() throws IOException {
         Repurchase repurchase = new Repurchase();
         List<Transaction> transactions = repurchase.getTransactions().collect(Collectors.toList());
-        assertTrue(transactions.size() > 25);
+        assertTrue(transactions.size() > 20);
     }
 
     @Test
