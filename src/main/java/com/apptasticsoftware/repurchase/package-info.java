@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020, Apptastic Software
+ * Copyright (c) 2022, Apptastic Software
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,4 +25,4 @@
 /**
  * This package is intended for extracting information about repurchases of own shares from Nasdaq OMX Nordic.
  */
-package com.apptastic.repurchase;
+package com.apptasticsoftware.repurchase;

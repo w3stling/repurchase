@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020, Apptastic Software
+ * Copyright (c) 2022, Apptastic Software
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.apptastic.repurchase;
+package com.apptasticsoftware.repurchase;
 
 import java.io.IOException;
 import java.io.InputStream;
