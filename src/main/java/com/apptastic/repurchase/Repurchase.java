@@ -25,18 +25,14 @@ package com.apptastic.repurchase;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URLEncoder;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -52,7 +48,7 @@ import org.jsoup.select.Elements;
  */
 public class Repurchase {
     private static final Logger LOGGER = Logger.getLogger(Repurchase.class.getName());
-    private static final String URL = "http://www.nasdaqomx.com/transactions/markets/nordic/corporate-actions/stockholm/repurchases-of-own-shares";
+    private static final String URL = "http://www.nasdaqomxnordic.com/news/corporate-actions/repurchase-of-own-shares";
 
     /**
      * Get transactions from the last 30 days
@@ -111,7 +107,7 @@ public class Repurchase {
 
         for (Element row : tableRowElements) {
             Elements rowItems = row.select("td");
-            if (!isValidRow(rowItems)) {
+            if (isInvalidRow(rowItems)) {
                 continue;
             }
 
@@ -139,16 +135,16 @@ public class Repurchase {
 
     private static Transaction createTransaction(TransactionMapper mapper, Elements rowItems) {
         return new Transaction(mapper.getCompany(rowItems), mapper.getType(rowItems),
-                               mapper.getDate(rowItems), mapper.getPrice(rowItems),
-                               mapper.getQuantity(rowItems), mapper.getValue(rowItems),
-                               mapper.getComment(rowItems));
+                mapper.getDate(rowItems), mapper.getPrice(rowItems),
+                mapper.getQuantity(rowItems), mapper.getValue(rowItems),
+                mapper.getComment(rowItems));
     }
 
-    private boolean isValidRow(Elements row) {
-        return row != null && row.size() >= 6;
+    private boolean isInvalidRow(Elements row) {
+        return row == null || row.size() < 6;
     }
     private boolean isTransactionRow(Elements row) {
-        if (!isValidRow(row)) {
+        if (isInvalidRow(row)) {
             return false;
         }
 
@@ -158,8 +154,8 @@ public class Repurchase {
 
     private static boolean isValid(Transaction transaction) {
         return transaction != null &&
-               transaction.getCompany() != null && transaction.getType() != null &&
-               transaction.getDate() != null;
+                transaction.getCompany() != null && transaction.getType() != null &&
+                transaction.getDate() != null;
     }
 
     private InputStream sendRequest(LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
@@ -169,15 +165,32 @@ public class Repurchase {
         data.put("selected", "");
         data.put("languageId", "");
 
-        var request = HttpRequest.newBuilder()
-                                 .POST(ofFormData(data))
-                                 .uri(URI.create(URL))
-                                 .header("Accept-Encoding", "gzip")
-                                 .header("Content-Type", "application/x-www-form-urlencoded")
-                                 .timeout(Duration.ofSeconds(45))
-                                 .build();
+        try {
+            CookieHandler.setDefault(new CookieManager());
 
-        HttpClient client = HttpClient.newHttpClient();
+            HttpCookie sessionCookie = new HttpCookie("session", "53616c7465645f5f9d467d3ae831ec1b1e7289ef45d256224786e1ed13");
+            sessionCookie.setPath("/");
+            sessionCookie.setVersion(0);
+
+            ((CookieManager) CookieHandler.getDefault()).getCookieStore().add(new URI("http://www.nasdaqomxnordic.com"), sessionCookie);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        var request = HttpRequest.newBuilder()
+                .POST(ofFormData(data))
+                .uri(URI.create(URL))
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .timeout(Duration.ofSeconds(15))
+                .build();
+
+
+        HttpClient client = HttpClient.newBuilder()
+                .cookieHandler(CookieHandler.getDefault())
+                .connectTimeout(Duration.ofSeconds(15))
+                .build();
+
         HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
         if (response.statusCode() >= 400 && response.statusCode() < 600) {
@@ -216,8 +229,8 @@ public class Repurchase {
         public static boolean isHeaderColumn(Elements rowItems) {
             String text = rowItems.get(0).text().trim();
             return COLUMN_COMPANY.equalsIgnoreCase(text) || COLUMN_TYPE.equalsIgnoreCase(text) ||
-                   COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
-                   COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
+                    COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
+                    COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
         }
 
         public String getCompany(Elements rowItems) {
@@ -230,6 +243,7 @@ public class Repurchase {
 
         public LocalDate getDate(Elements rowItems) {
             String text = getText(rowItems, COLUMN_DATE);
+            Objects.requireNonNull(text);
             return LocalDate.parse(text);
         }
 
@@ -277,9 +291,9 @@ public class Repurchase {
             }
 
             return rowItems.get(index)
-                           .selectFirst("td")
-                           .text()
-                           .trim();
+                    .selectFirst("td")
+                    .text()
+                    .trim();
         }
 
         private static double parseDouble(String value) {
@@ -292,7 +306,7 @@ public class Repurchase {
             try {
                 value = value.replace(",","").trim();
                 value = value.replace(" ", "");
-                floatNumber = Double.valueOf(value);
+                floatNumber = Double.parseDouble(value);
             }
             catch (Exception e) {
                 LOGGER.log(Level.WARNING, "Failed to parse double. ", e);
