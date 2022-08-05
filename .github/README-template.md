@@ -2,10 +2,10 @@ Repurchase
 ==================
 
 [![Build](https://github.com/w3stling/repurchase/actions/workflows/build.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/build.yml)
-[![Download](https://img.shields.io/badge/download-2.0.0-brightgreen.svg)](https://search.maven.org/artifact/com.apptasticsoftware/repurchase/2.0.0/jar)
-[![Javadoc](https://img.shields.io/badge/javadoc-2.0.0-blue.svg)](https://w3stling.github.io/repurchase/javadoc/2.0.0)
+[![Download](https://img.shields.io/badge/download-%%version%%-brightgreen.svg)](https://search.maven.org/artifact/com.apptasticsoftware/repurchase/%%version%%/jar)
+[![Javadoc](https://img.shields.io/badge/javadoc-%%version%%-blue.svg)](https://w3stling.github.io/repurchase/javadoc/%%version%%)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat-round)](http://apptastic-software.mit-license.org)   
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.apptasticsoftware%3Arepurchase)
+[![CodeQL](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.apptasticsoftware%3Arepurchase)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=coverage)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=Coverage)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=bugs)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=bugs)
@@ -32,20 +32,6 @@ Download
 Download [the latest JAR][2] or grab via [Maven][3] or [Gradle][4].
 
 ### Maven setup
-Add JCenter repository for resolving artifact:
-```xml
-<project>
-    ...
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
-    ...
-</project>
-```
-
 Add dependency declaration:
 ```xml
 <project>
@@ -54,7 +40,7 @@ Add dependency declaration:
         <dependency>
             <groupId>com.apptasticsoftware</groupId>
             <artifactId>repurchase</artifactId>
-            <version>1.0.2</version>
+            <version>%%version%%</version>
         </dependency>
     </dependencies>
     ...
@@ -62,17 +48,10 @@ Add dependency declaration:
 ```
 
 ### Gradle setup
-Add JCenter repository for resolving artifact:
-```groovy
-repositories {
-    jcenter()
-}
-```
-
 Add dependency declaration:
 ```groovy
 dependencies {
-    implementation 'com.apptasticsoftware:repurchase:2.0.0'
+    implementation 'com.apptasticsoftware:repurchase:%%version%%'
 }
 ```
 
@@ -83,7 +62,7 @@ License
 
     MIT License
     
-    Copyright (c) 2022, Apptastic Software
+    Copyright (c) %%year%%, Apptastic Software
     
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -105,6 +84,6 @@ License
 
 
 [1]: http://www.nasdaqomx.com
-[2]: https://search.maven.org/artifact/com.apptasticsoftware/repurchase/2.0.0/jar
+[2]: https://search.maven.org/artifact/com.apptasticsoftware/repurchase/%%version%%/jar
 [3]: https://maven.apache.org
 [4]: https://gradle.org
