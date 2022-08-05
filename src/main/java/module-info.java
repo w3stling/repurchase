@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020, Apptastic Software
+ * Copyright (c) 2022, Apptastic Software
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
  */
 
 /**
- * This modules defines the base APIs for repurchase.
+ * These modules define the base APIs for repurchase.
  */
-module com.apptastic.repurchase {
-    exports com.apptastic.repurchase;
+module com.apptasticsoftware.repurchase {
+    exports com.apptasticsoftware.repurchase;
 
     requires org.jsoup;
     requires java.net.http;

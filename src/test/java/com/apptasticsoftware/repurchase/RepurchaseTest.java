@@ -1,4 +1,4 @@
-package com.apptastic.repurchase;
+package com.apptasticsoftware.repurchase;
 
 import org.junit.Test;
 
@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RepurchaseTest {
 
@@ -17,6 +16,17 @@ public class RepurchaseTest {
         Repurchase repurchase = new Repurchase();
         List<Transaction> transactions = repurchase.getTransactions().collect(Collectors.toList());
         assertTrue(transactions.size() > 10);
+
+        Transaction transaction = transactions.get(0);
+        assertNotNull(transaction);
+        assertNotNull(transaction.getDate());
+        assertNotNull(transaction.getType());
+        assertNotNull(transaction.getCompany());
+        assertNotNull(transaction.getComment());
+        assertNotNull(transaction.getPrice());
+        assertNotNull(transaction.getPrice());
+        assertTrue(transaction.getQuantity() >= 0.0);
+        assertTrue(transaction.getValue() >= 0.0);
     }
 
     @Test
@@ -34,8 +44,8 @@ public class RepurchaseTest {
             LocalDate end = LocalDate.now();
             LocalDate start = end.minusDays(10);
             Repurchase repurchase = new Repurchase();
-            List<Transaction> transactions = repurchase.getTransactions(end, start).collect(Collectors.toList());
-            assertTrue(false);
+            repurchase.getTransactions(end, start);
+            fail();
         }
         catch (IllegalArgumentException e) {
             assertTrue(true);
