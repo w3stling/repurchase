@@ -39,7 +39,6 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -50,6 +49,7 @@ public class Repurchase {
     private static final Logger LOGGER = Logger.getLogger(Repurchase.class.getName());
     private static final String URL = "http://www.nasdaqomxnordic.com/news/corporate-actions/repurchase-of-own-shares";
     private static final String COOKIE_URL = "http://www.nasdaqomxnordic.com";
+
     /**
      * Get transactions from the last 30 days
      * @return stream of transactions
@@ -66,8 +66,8 @@ public class Repurchase {
      * @throws IOException IOException
      */
     public Stream<Transaction> getTransactions(int daysBack) throws IOException {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(daysBack);
+        var endDate = LocalDate.now();
+        var startDate = endDate.minusDays(daysBack);
         return getTransactions(startDate, endDate);
     }
 
@@ -84,7 +84,7 @@ public class Repurchase {
         }
 
         try {
-            InputStream inputStream = sendRequest(startDate, endDate.plusDays(1));
+            var inputStream = sendRequest(startDate, endDate.plusDays(1));
             return parse(inputStream).stream();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -94,19 +94,19 @@ public class Repurchase {
 
     private List<Transaction> parse(InputStream inputStream) throws IOException {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        Document doc = Jsoup.parse(inputStream, "UTF-8", URL);
-        Element tableElement = doc.selectFirst("table[id=resultReurchaseId]");
+        var doc = Jsoup.parse(inputStream, "UTF-8", URL);
+        var tableElement = doc.selectFirst("table[id=resultReurchaseId]");
 
         if (tableElement == null) {
             throw new IOException("Failed to find reurchase table");
         }
 
-        Elements tableRowElements = tableElement.select("tr[class*=tableTr]");
-        TransactionMapper mapper = new TransactionMapper();
-        boolean hasInitHeaders = false;
+        var tableRowElements = tableElement.select("tr[class*=tableTr]");
+        var mapper = new TransactionMapper();
+        var hasInitHeaders = false;
 
         for (Element row : tableRowElements) {
-            Elements rowItems = row.select("td");
+            var rowItems = row.select("td");
             if (isInvalidRow(rowItems)) {
                 continue;
             }
@@ -120,7 +120,7 @@ public class Repurchase {
             }
             else if (isTransactionRow(rowItems)){
                 try {
-                    Transaction transaction = createTransaction(mapper, rowItems);
+                    var transaction = createTransaction(mapper, rowItems);
                     if (isValid(transaction)) {
                         transactions.add(transaction);
                     }
@@ -148,7 +148,7 @@ public class Repurchase {
             return false;
         }
 
-        String dateText = row.get(2).text().trim();
+        var dateText = row.get(2).text().trim();
         return dateText.length() == 10 && dateText.charAt(4) == '-' && dateText.charAt(7) == '-';
     }
 
@@ -168,11 +168,11 @@ public class Repurchase {
         try {
             CookieHandler.setDefault(new CookieManager());
 
-            HttpCookie sessionCookie = new HttpCookie("session", "53616c7465645f5f9d467d3ae831ec1b1e7289ef45d256224786e1ed13");
+            var sessionCookie = new HttpCookie("session", "53616c7465645f5f9d467d3ae831ec1b1e7289ef45d256224786e1ed13");
             sessionCookie.setPath("/");
             sessionCookie.setVersion(0);
 
-            URI cookieUrl = new URI(COOKIE_URL);
+            var cookieUrl = new URI(COOKIE_URL);
             ((CookieManager) CookieHandler.getDefault()).getCookieStore().add(cookieUrl, sessionCookie);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -187,19 +187,19 @@ public class Repurchase {
                 .build();
 
 
-        HttpClient client = HttpClient.newBuilder()
+        var client = HttpClient.newBuilder()
                 .cookieHandler(CookieHandler.getDefault())
                 .connectTimeout(Duration.ofSeconds(15))
                 .build();
 
-        HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
         if (response.statusCode() >= 400 && response.statusCode() < 600) {
             throw new IOException("Response http status code: " + response.statusCode());
         }
 
         InputStream inputStream;
-        String encoding = response.headers().firstValue("Content-Encoding").orElse("");
+        var encoding = response.headers().firstValue("Content-Encoding").orElse("");
 
         if (encoding.equals("gzip")) {
             inputStream = new GZIPInputStream(response.body());
@@ -222,13 +222,13 @@ public class Repurchase {
 
         void initialize(String[] header) {
             for (int i = 0; i < header.length; ++i) {
-                String columnHeaderText = header[i].trim();
+                var columnHeaderText = header[i].trim();
                 columnName2Index.put(columnHeaderText, i);
             }
         }
 
         public static boolean isHeaderColumn(Elements rowItems) {
-            String text = rowItems.get(0).text().trim();
+            var text = rowItems.get(0).text().trim();
             return COLUMN_COMPANY.equalsIgnoreCase(text) || COLUMN_TYPE.equalsIgnoreCase(text) ||
                     COLUMN_DATE.equalsIgnoreCase(text) || COLUMN_PRICE.equalsIgnoreCase(text) ||
                     COLUMN_QUANTITY.equalsIgnoreCase(text) ||COLUMN_VALUE.equalsIgnoreCase(text);
@@ -243,13 +243,13 @@ public class Repurchase {
         }
 
         public LocalDate getDate(Elements rowItems) {
-            String text = getText(rowItems, COLUMN_DATE);
+            var text = getText(rowItems, COLUMN_DATE);
             Objects.requireNonNull(text);
             return LocalDate.parse(text);
         }
 
         public Double getPrice(Elements rowItems) {
-            String text = getText(rowItems, COLUMN_PRICE);
+            var text = getText(rowItems, COLUMN_PRICE);
             if (text == null || text.isEmpty()) {
                 return null;
             }
@@ -262,17 +262,17 @@ public class Repurchase {
         }
 
         public double getQuantity(Elements rowItems) {
-            String text = getText(rowItems, COLUMN_QUANTITY);
+            var text = getText(rowItems, COLUMN_QUANTITY);
             return parseDouble(text);
         }
 
         public double getValue(Elements rowItems) {
-            String text = getText(rowItems, COLUMN_VALUE);
+            var text = getText(rowItems, COLUMN_VALUE);
             return parseDouble(text);
         }
 
         public String getComment(Elements rowItems) {
-            String text = getText(rowItems, COLUMN_PRICE);
+            var text = getText(rowItems, COLUMN_PRICE);
             if (text == null || text.isEmpty()) {
                 return null;
             }
@@ -285,14 +285,14 @@ public class Repurchase {
         }
 
         private String getText(Elements rowItems, String column) {
-            Integer index = columnName2Index.get(column);
+            var index = columnName2Index.get(column);
 
             if (index == null) {
                 return null;
             }
 
-            return rowItems.get(index)
-                    .selectFirst("td")
+            return Objects.requireNonNull(rowItems.get(index)
+                            .selectFirst("td"))
                     .text()
                     .trim();
         }
