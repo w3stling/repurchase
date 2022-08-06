@@ -5,6 +5,7 @@ Repurchase
 [![Download](https://img.shields.io/badge/download-2.0.0-brightgreen.svg)](https://search.maven.org/artifact/com.apptasticsoftware/repurchase/2.0.0/jar)
 [![Javadoc](https://img.shields.io/badge/javadoc-2.0.0-blue.svg)](https://w3stling.github.io/repurchase/javadoc/2.0.0)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat-round)](http://apptastic-software.mit-license.org)   
+[![CodeQL](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=coverage)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=bugs)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
@@ -31,20 +32,6 @@ Download
 Download [the latest JAR][2] or grab via [Maven][3] or [Gradle][4].
 
 ### Maven setup
-Add JCenter repository for resolving artifact:
-```xml
-<project>
-    ...
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
-    ...
-</project>
-```
-
 Add dependency declaration:
 ```xml
 <project>
@@ -61,13 +48,6 @@ Add dependency declaration:
 ```
 
 ### Gradle setup
-Add JCenter repository for resolving artifact:
-```groovy
-repositories {
-    jcenter()
-}
-```
-
 Add dependency declaration:
 ```groovy
 dependencies {
