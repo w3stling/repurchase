@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RepurchaseTest {
 
     @Test
-    public void repurchase() throws IOException {
+    void repurchase() throws IOException {
         Repurchase repurchase = new Repurchase();
         List<Transaction> transactions = repurchase.getTransactions().collect(Collectors.toList());
         assertTrue(transactions.size() > 10);
@@ -30,7 +30,7 @@ public class RepurchaseTest {
     }
 
     @Test
-    public void futureDate() throws IOException {
+    void futureDate() throws IOException {
         LocalDate end = LocalDate.now().plusMonths(2);
         LocalDate start = end.minusDays(10);
         Repurchase repurchase = new Repurchase();
@@ -39,7 +39,7 @@ public class RepurchaseTest {
     }
 
     @Test
-    public void badInput() throws IOException {
+    void badInput() throws IOException {
         try {
             LocalDate end = LocalDate.now();
             LocalDate start = end.minusDays(10);
