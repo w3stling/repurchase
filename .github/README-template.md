@@ -6,11 +6,11 @@ Repurchase
 [![Javadoc](https://img.shields.io/badge/javadoc-%%version%%-blue.svg)](https://w3stling.github.io/repurchase/javadoc/%%version%%)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat-round)](http://apptastic-software.mit-license.org)   
 [![CodeQL](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.apptasticsoftware%3Arepurchase)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=coverage)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=Coverage)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=bugs)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=bugs)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=vulnerabilities)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=vulnerabilities)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.apptasticsoftware%3Arepurchase&metric=code_smells)](https://sonarcloud.io/component_measures?id=com.apptasticsoftware%3Arepurchase&metric=code_smells)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=coverage)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=bugs)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
 
 Corporate action stock repurchase transactions from [Nasdaq OMX Nordic][1]
 
