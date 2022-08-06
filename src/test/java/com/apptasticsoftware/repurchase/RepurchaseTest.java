@@ -39,16 +39,10 @@ public class RepurchaseTest {
     }
 
     @Test
-    void badInput() throws IOException {
-        try {
-            LocalDate end = LocalDate.now();
-            LocalDate start = end.minusDays(10);
-            Repurchase repurchase = new Repurchase();
-            repurchase.getTransactions(end, start);
-            fail();
-        }
-        catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
+    void badInput() {
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusDays(10);
+        Repurchase repurchase = new Repurchase();
+        assertThrows(IllegalArgumentException.class, () -> repurchase.getTransactions(end, start));
     }
 }
