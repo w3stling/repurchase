@@ -12,6 +12,11 @@ Repurchase
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=w3stling_repurchase&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=w3stling_repurchase)
 
+> **Note** - from version 2.0.0:
+> * New Java package name
+> * New group ID in Maven / Gradle dependency declaration
+> * Moved repository from `JCenter` to `Maven Central Repository`
+
 Corporate action stock repurchase transactions from [Nasdaq OMX Nordic][1]
 
 This Java library makes it easy to extract information about repurchases of own shares from Nasdaq OMX Nordic.
