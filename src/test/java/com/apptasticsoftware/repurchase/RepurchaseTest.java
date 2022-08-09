@@ -25,8 +25,6 @@ class RepurchaseTest {
         assertNotNull(transaction.getComment());
         assertNotNull(transaction.getPrice());
         assertNotNull(transaction.getPrice());
-        assertTrue(transaction.getQuantity() >= 0.0);
-        assertTrue(transaction.getValue() >= 0.0);
     }
 
     @Test
