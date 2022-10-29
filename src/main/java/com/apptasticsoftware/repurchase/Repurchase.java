@@ -47,8 +47,8 @@ import org.jsoup.select.Elements;
  */
 public class Repurchase {
     private static final Logger LOGGER = Logger.getLogger(Repurchase.class.getName());
-    private static final String URL = "http://www.nasdaqomxnordic.com/news/corporate-actions/repurchase-of-own-shares";
-    private static final String COOKIE_URL = "http://www.nasdaqomxnordic.com";
+    private static final String URL = "https://www.nasdaqomxnordic.com/news/corporate-actions/repurchase-of-own-shares";
+    private static final String COOKIE_URL = "https://www.nasdaqomxnordic.com";
 
     /**
      * Get transactions from the last 30 days
