@@ -2,7 +2,7 @@ Repurchase
 ==================
 
 [![Build](https://github.com/w3stling/repurchase/actions/workflows/build.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/build.yml)
-[![Download](https://img.shields.io/badge/download-%%version%%-brightgreen.svg)](https://search.maven.org/artifact/com.apptasticsoftware/repurchase/%%version%%/jar)
+[![Download](https://img.shields.io/badge/download-%%version%%-brightgreen.svg)](https://central.sonatype.com/artifact/com.apptasticsoftware/repurchase/%%version%%/overview)
 [![Javadoc](https://img.shields.io/badge/javadoc-%%version%%-blue.svg)](https://w3stling.github.io/repurchase/javadoc/%%version%%)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat-round)](http://apptastic-software.mit-license.org)   
 [![CodeQL](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/w3stling/repurchase/actions/workflows/codeql-analysis.yml)
@@ -89,6 +89,6 @@ License
 
 
 [1]: http://www.nasdaqomx.com
-[2]: https://search.maven.org/artifact/com.apptasticsoftware/repurchase/%%version%%/jar
+[2]: https://central.sonatype.com/artifact/com.apptasticsoftware/repurchase/%%version%%/overview
 [3]: https://maven.apache.org
 [4]: https://gradle.org
