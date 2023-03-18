@@ -119,20 +119,14 @@ public class Transaction implements Comparable<Transaction> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Transaction)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Double.compare(that.quantity, quantity) == 0 &&
-                Double.compare(that.value, value) == 0 &&
-                Objects.equals(company, that.company) &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(date, that.date) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(comment, that.comment);
+        return Double.compare(that.getQuantity(), getQuantity()) == 0 && Double.compare(that.getValue(), getValue()) == 0 && Objects.equals(getCompany(), that.getCompany()) && Objects.equals(getType(), that.getType()) && Objects.equals(getDate(), that.getDate()) && getPrice().equals(that.getPrice()) && getComment().equals(that.getComment());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(company, type, date, price, quantity, value, comment);
+        return Objects.hash(getCompany(), getType(), getDate(), getPrice(), getQuantity(), getValue(), getComment());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.apptasticsoftware.repurchase;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -42,5 +43,10 @@ class RepurchaseTest {
         LocalDate start = end.minusDays(10);
         Repurchase repurchase = new Repurchase();
         assertThrows(IllegalArgumentException.class, () -> repurchase.getTransactions(end, start));
+    }
+
+    @Test
+    void equalsContract() {
+        EqualsVerifier.simple().forClass(Transaction.class).verify();
     }
 }
