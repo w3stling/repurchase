@@ -318,7 +318,7 @@ public class Repurchase {
         }
     }
 
-    public static HttpRequest.BodyPublisher ofFormData(Map<Object, Object> data) {
+    private static HttpRequest.BodyPublisher ofFormData(Map<Object, Object> data) {
         var builder = new StringBuilder();
         for (Map.Entry<Object, Object> entry : data.entrySet()) {
             if (builder.length() > 0) {
