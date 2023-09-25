@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation 'org.jsoup:jsoup:1.16.1'
-    testImplementation('nl.jqno.equalsverifier:equalsverifier:3.15')
+    testImplementation('nl.jqno.equalsverifier:equalsverifier:3.15.2')
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
