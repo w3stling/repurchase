@@ -28,7 +28,7 @@
 module com.apptasticsoftware.repurchase {
     exports com.apptasticsoftware.repurchase;
 
-    requires org.jsoup;
     requires java.net.http;
+    requires com.google.gson;
     requires java.logging;
 }
