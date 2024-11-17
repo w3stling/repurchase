@@ -36,6 +36,7 @@ public class TransactionParser {
      *         input JSON is empty or does not contain transactions.
      * @throws IOException If an I/O error occurs during parsing.
      */
+    @SuppressWarnings("java:S3776")
     public static List<Transaction> parseTransactions(InputStream inputStream) throws IOException {
         List<Transaction> transactions = new ArrayList<>();
         Gson gson = new Gson();
@@ -105,6 +106,7 @@ public class TransactionParser {
      * Inner class representing a single row of transaction data.
      * This class is used internally by the {@link TransactionParser} to map JSON data to Java objects.
      */
+    @SuppressWarnings("java:S116")
     public static class Row {
         private String company_name;
         private String type;
@@ -162,6 +164,7 @@ public class TransactionParser {
         }
     }
 
+    @SuppressWarnings("java:S3252")
     private static Optional<Double> parseDouble(String value) {
         DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
         df.setParseBigDecimal(true);
