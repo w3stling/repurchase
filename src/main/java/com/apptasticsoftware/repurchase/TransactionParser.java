@@ -2,6 +2,7 @@ package com.apptasticsoftware.repurchase;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +54,7 @@ public class TransactionParser {
                         reader.beginObject();
                         while (reader.hasNext()) {
                             String transactionDataName = reader.nextName();
-                            if (transactionDataName.equals("rowsData")) {
+                            if (transactionDataName.equals("rowsData") && reader.peek() != JsonToken.NULL) {
                                 reader.beginObject();
                                 while (reader.hasNext()) {
                                     reader.nextName(); // Skip the date key
