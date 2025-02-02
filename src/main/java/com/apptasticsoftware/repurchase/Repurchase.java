@@ -31,6 +31,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
@@ -78,28 +82,35 @@ public class Repurchase {
             return Stream.empty();
         }
 
-        try {
-            var inputStream = sendRequest();
-            return TransactionParser.parseTransactions(inputStream).stream()
-                    .filter(transaction -> !startDate.isAfter(transaction.getDate()) && !endDate.isBefore(transaction.getDate()));
-
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return Stream.empty();
+        List<Transaction> transactions = new ArrayList<>();
+        for (int year = startDate.getYear(); year <= endDate.getYear(); year++) {
+            try {
+                var inputStream = sendRequest(year);
+                var newTransactions = TransactionParser.parseTransactions(inputStream).stream()
+                        .filter(transaction -> !startDate.isAfter(transaction.getDate()) && !endDate.isBefore(transaction.getDate()))
+                        .collect(Collectors.toList());
+                transactions.addAll(newTransactions);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return Stream.empty();
+            }
         }
+        return transactions.stream()
+                .sorted(Comparator.comparing(Transaction::getDate).reversed()
+                        .thenComparing(Transaction::getCompany)
+                        .thenComparing(Transaction::getType));
     }
 
-    private InputStream sendRequest() throws IOException, InterruptedException {
+    private InputStream sendRequest(int year) throws IOException, InterruptedException {
 
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(URL))
+                .uri(URI.create(URL + "?year=" + year))
                 .header("Accept-Encoding", "gzip, deflate")
-                .timeout(Duration.ofSeconds(15))
+                .timeout(Duration.ofSeconds(20))
                 .build();
 
-
         var client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(15))
+                .connectTimeout(Duration.ofSeconds(20))
                 .build();
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
