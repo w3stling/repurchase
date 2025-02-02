@@ -44,6 +44,7 @@ import java.util.zip.GZIPInputStream;
 public class Repurchase {
     // https://www.nasdaq.com/european-market-activity/news/corporate-actions/repurchase-of-own-shares
     private static final String URL = "https://www.nasdaq.com/api/v1/transaction";
+    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36";
 
     /**
      * Get transactions from the last 30 days
@@ -106,6 +107,7 @@ public class Repurchase {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(URL + "?year=" + year))
                 .header("Accept-Encoding", "gzip, deflate")
+                .header("User-Agent", USER_AGENT)
                 .timeout(Duration.ofSeconds(20))
                 .build();
 
